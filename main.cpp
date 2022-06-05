@@ -1,62 +1,35 @@
-#include <iostream>
+#include "tests/GraphBenchmark.hpp"
+#include <string>
 
-#include "Menu.hpp"
-#include "utilities/ReaderFromFile.hpp"
-#include "utilities/RandomGenerator.hpp"
-#include "utilities/Timer.hpp"
-#include "algorithms/Prim/PrimAlgorithm.hpp"
 
-int main() {
+int main(int argc, char *argv[]) {
 
-/*    size_t tab[] = {
-            0, 1, 2,
-            0, 2, 4,
-            1, 2, 2,
-            1, 3, 4,
-            1, 4, 2,
-            2, 4, 3,
-            3, 4, 3,
-            3, 5, 2,
-            4, 5, 2
-    };*/
+    //np ./SDiZO_2 0.5 100 1050 MS
+    const float DENSITY = std::strtof(argv[1], nullptr);
+    const int VERTEX_COUNT = std::stoi(argv[2], nullptr, 10);
+    const long RETRIES = std::strtol(argv[3], nullptr, 10);
+    std::string timePrecision(argv[4]);
+    std::transform(timePrecision.begin(), timePrecision.end(), timePrecision.begin(), tolower);
 
-    ReaderFromFile reader;
+    if (timePrecision == "ns") GraphBenchmark::setPrecision(GraphBenchmark::NANOS);
+    else if (timePrecision == "mi") GraphBenchmark::setPrecision(GraphBenchmark::MICROS);
+    else if (timePrecision == "ms") GraphBenchmark::setPrecision(GraphBenchmark::MILIS);
+    else if (timePrecision == "se") GraphBenchmark::setPrecision(GraphBenchmark::SECS);
+    else GraphBenchmark::setPrecision(GraphBenchmark::NANOS);
 
-    //Timer t;
 
-    auto graphData = RandomGenerator::generateRandomGraph(8, 0.5);
+    GraphBenchmark::setFileOutput(fopen("tests.txt", "w"));
+    GraphBenchmark::setGenerateCSV(true);
+    GraphBenchmark::setRetries(RETRIES);
 
-    //t.stop();
+    GraphBenchmark::primIncidentMatrix(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::primNeighbourhoodList(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::kruskalIncidentMatrix(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::kruskalNeighbourhoodList(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::dijkstraIncidentMatrix(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::dijkstraNeighbourhoodList(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::bellmanIncidentMatrix(DENSITY, VERTEX_COUNT);
+    GraphBenchmark::bellmanNeighbourhoodList(DENSITY, VERTEX_COUNT);
 
-    //std::cout << "\nCzas operacji: " << t.getNanos() << std::endl;
-
-    //auto matrix = new IncidentMatrix(9, 6, tab);
-
-   // auto matrix = reader.readerForMatrix("dane.txt");
-
-    auto matrix = new IncidentMatrix(graphData.edgeCount, graphData.vertexCount, graphData.data);
-
-    matrix->print();
-
-    auto matrixPRIM = Prim::generateMst(*matrix);
-
-    matrixPRIM->print();
-    matrixPRIM->printFancy();
-
-    delete matrix;
-
-    //auto list = new NeighbourhoodList(9, 6, tab);
-
-    //auto list = reader.readerForList("dane.txt");
-
-    //auto list = new NeighbourhoodList(graphData.edgeCount, graphData.vertexCount, graphData.data);
-
-    //list->print();
-
-    //delete list;
-
-    //delete[] graphData.data;
-
-    //menu();
     return 0;
 }

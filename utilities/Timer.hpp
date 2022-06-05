@@ -22,6 +22,14 @@ public:
         return std::chrono::duration_cast<std::chrono::milliseconds>(result).count();
     }
 
+    long getMicros() {
+        return std::chrono::duration_cast<std::chrono::microseconds>(result).count();
+    }
+
+    long getSeconds() {
+        return std::chrono::duration_cast<std::chrono::seconds>(result).count();
+    }
+
 private:
     std::chrono::high_resolution_clock::time_point start {};
     std::chrono::nanoseconds result {};

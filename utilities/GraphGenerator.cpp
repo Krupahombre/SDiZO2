@@ -1,9 +1,9 @@
-#include "RandomGenerator.hpp"
+#include "GraphGenerator.hpp"
 
-GraphData RandomGenerator::generateRandomGraph(size_t vertexNumber, float density) {
+GraphData GraphGenerator::generateRandomGraph(size_t vertexCount, float density) {
 
-    int32_t minEdgeNumber = vertexNumber;
-    int32_t edgeNumber = (density * vertexNumber * (vertexNumber - 1)) / 2;
+    int32_t minEdgeNumber = vertexCount;
+    int32_t edgeNumber = static_cast<int32_t>((density * vertexCount * (vertexCount - 1)) / 2);
     edgeNumber = edgeNumber > minEdgeNumber ? edgeNumber : minEdgeNumber;
     int32_t dataSize = 3 * edgeNumber;
     int32_t* data = new int32_t[dataSize];
@@ -12,7 +12,7 @@ GraphData RandomGenerator::generateRandomGraph(size_t vertexNumber, float densit
     std::random_device seed;
     std::mt19937 gen(seed());
     std::uniform_int_distribution<size_t> sumOfCosts(1, maxValue);
-    std::uniform_int_distribution<size_t> vertices(0, vertexNumber - 1);
+    std::uniform_int_distribution<size_t> vertices(0, vertexCount - 1);
 
     bool** isThereConnection = new bool*[edgeNumber];
 
@@ -64,8 +64,28 @@ GraphData RandomGenerator::generateRandomGraph(size_t vertexNumber, float densit
 
     GraphData result;
     result.data = data;
-    result.vertexCount = vertexNumber;
+    result.vertexCount = vertexCount;
     result.edgeCount = edgeNumber;
 
     return result;
+}
+
+IncidentMatrix*  GraphGenerator::generateRandomGraphAsIncidentMatrix(size_t vertexCount, float density) {
+
+    auto graphData = generateRandomGraph(vertexCount, density);
+
+    return new IncidentMatrix(
+            graphData.edgeCount,
+            graphData.vertexCount,
+            graphData.data);
+}
+
+NeighbourhoodList* GraphGenerator::generateRandomGraphAsNeighbourhoodList(size_t vertexCount, float density) {
+
+    auto graphData = generateRandomGraph(vertexCount, density);
+
+    return new NeighbourhoodList(
+            graphData.edgeCount,
+            graphData.vertexCount,
+            graphData.data);
 }
