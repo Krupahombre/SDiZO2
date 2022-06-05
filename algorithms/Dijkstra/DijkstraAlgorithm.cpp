@@ -1,76 +1,54 @@
 #include "DijkstraAlgorithm.hpp"
 
-Path Dijkstra::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, int32_t to)
-{
-    // Get necessary stuff from the graph
+Path Dijkstra::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, int32_t destination) {
+    //Przypisanie potrzebnych danych z macierzy do lokalnych zmiennych
     Path result;
     MatrixValues** matrix = incidentMatrix.getIncidentMatrix();
     int32_t vertexNumber = incidentMatrix.getVertexCount();
     int32_t edgesNumer = incidentMatrix.getEdgeCount();
     int32_t* values = incidentMatrix.getEdgeValues();
 
-    // Create array to store information, whether vertex was visited
-    bool* visitedVertices = new bool[vertexNumber];
-    for (size_t i = 0; i < vertexNumber; i++)
-    {
-        visitedVertices[i] = false;
+    //Tablica informująca o tym czy wierzchołek został odwiedzony
+    bool* visitedVertex = new bool[vertexNumber];
+
+    //Zapełnienie tej tablicy
+    for (size_t i = 0; i < vertexNumber; i++) {
+        visitedVertex[i] = false;
     }
 
-    // Generate starting travel costs
-    int32_t* travelCosts = new int32_t[vertexNumber];
-    for (size_t i = 0; i < vertexNumber; i++)
-    {
-        travelCosts[i] = INT32_MAX;
+    //Wygenerowanie tablicy która przechowuje koszt przejścia do danego wierzchołka
+    //Początkowo przypisujemy największą możliwą wartość
+    int32_t* costOfTravelling = new int32_t[vertexNumber];
+    for (size_t i = 0; i < vertexNumber; i++) {
+        costOfTravelling[i] = INT32_MAX;
     }
 
-    // Create array to store previous vertex
+    //Utworzenie tablic do przechowywania poprzedniego wierzchołka
     int32_t* reachableFrom = new int32_t[vertexNumber];
-    // Create array to store single cost
+    //Tablica przechowująca koszt dojścia do danego wierzchołka
     int32_t* reachableFor = new int32_t[vertexNumber];
 
-    travelCosts[from] = 0;
+    costOfTravelling[from] = 0;
     int32_t currentVertex = from;
-    int32_t unvisitedVerticesNumber = vertexNumber;
+    int32_t unvisitedVertexNumber = vertexNumber;
 
-    // Find new current vertex
-    auto assignNewCurrentVertex = [&]()
-    {
-        visitedVertices[currentVertex] = true;
-        unvisitedVerticesNumber--;
-        int32_t sortestPath = INT32_MAX;
-        for (size_t vertex = 0; vertex < vertexNumber; vertex++)
-        {
-            if (visitedVertices[vertex] == false && travelCosts[vertex] < sortestPath)
-            {
-                sortestPath = travelCosts[vertex];
-                currentVertex = vertex;
-            }
-        }
-    };
-
-    // While exists unvisited vertices
-    while (unvisitedVerticesNumber > 0)
-    {
-        // Iterate through all edges
-        for (size_t edge = 0; edge < edgesNumer; edge++)
-        {
-            if (matrix[currentVertex][edge] != MatrixValues::Origin)
-            {
+    //Wykonuj dopóki istnieją nieodwiedzone wierzchołki
+    while (unvisitedVertexNumber > 0) {
+        //Przechodzenie przez wszystkie krawędzie
+        for (size_t edge = 0; edge < edgesNumer; edge++) {
+            if (matrix[currentVertex][edge] != MatrixValues::Origin) {
                 continue;
             }
 
-            // Iterate through all vertices
-            for (size_t vertex = 0; vertex < vertexNumber; vertex++)
-            {
-                if (matrix[vertex][edge] != MatrixValues::Destination)
-                {
+            //Przechodzenie przez wszystkie wierzchołki
+            for (size_t vertex = 0; vertex < vertexNumber; vertex++) {
+                if (matrix[vertex][edge] != MatrixValues::Destination) {
                     continue;
                 }
 
-                // Check if current travel cost is lower than old one
-                if (travelCosts[currentVertex] + values[edge] < travelCosts[vertex])
-                {
-                    travelCosts[vertex] = travelCosts[currentVertex] + values[edge];
+                //Sprawdzenie czy aktualnie wygenerowany koszt podróży jest mniejszy niż ten już istniejący
+                if (costOfTravelling[currentVertex] + values[edge] < costOfTravelling[vertex]) {
+                    costOfTravelling[vertex] = costOfTravelling[currentVertex] + values[edge];
                     reachableFrom[vertex] = currentVertex;
                     reachableFor[vertex] = values[edge];
                 }
@@ -79,15 +57,22 @@ Path Dijkstra::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, in
             }
         }
 
-        // Assing new current vetrex
-        assignNewCurrentVertex();
+        //Przypisz nowy aktualny wierzchołek
+        visitedVertex[currentVertex] = true;
+        unvisitedVertexNumber--;
+        int32_t sortestPath = INT32_MAX;
+        for (size_t vertex = 0; vertex < vertexNumber; vertex++) {
+            if (visitedVertex[vertex] == false && costOfTravelling[vertex] < sortestPath) {
+                sortestPath = costOfTravelling[vertex];
+                currentVertex = vertex;
+            }
+        }
     }
 
-    currentVertex = to;
+    currentVertex = destination;
 
-    // Create the shortest path
-    while (currentVertex != from)
-    {
+    //Wygenerowanie najkrótszej ścieżki
+    while (currentVertex != from) {
         result.addEdge(PathEdge(reachableFor[currentVertex], reachableFrom[currentVertex], currentVertex));
         currentVertex = reachableFrom[currentVertex];
     }
@@ -95,62 +80,43 @@ Path Dijkstra::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, in
     return result;
 }
 
-Path Dijkstra::findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t from, int32_t to)
-{
-    // Get necessary stuff from the graph
+Path Dijkstra::findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t from, int32_t destination) {
+    //Przypisanie potrzebnych danych z listy do lokalnych zmiennych
     Path result;
     Edge** edges = neighbourhoodList.getNeighbourhoodList();
     int32_t vertexNumber = neighbourhoodList.getVertexCount();
 
-    // Create array to store information, whether vertex was visited
-    bool* visitedVertices = new bool[vertexNumber];
-    for (size_t i = 0; i < vertexNumber; i++)
-    {
-        visitedVertices[i] = false;
+    //Tablica informująca o tym czy wierzchołek został odwiedzony
+    bool* visitedVertex = new bool[vertexNumber];
+
+    //Zapełnienie tej tablicy
+    for (size_t i = 0; i < vertexNumber; i++) {
+        visitedVertex[i] = false;
     }
 
-    // Generate starting travel costs
-    int32_t* travelCosts = new int32_t[vertexNumber];
-    for (size_t i = 0; i < vertexNumber; i++)
-    {
-        travelCosts[i] = INT32_MAX;
+    //Wygenerowanie tablicy która przechowuje koszt przejścia do danego wierzchołka
+    //Początkowo przypisujemy największą możliwą wartość
+    int32_t* costOfTravelling = new int32_t[vertexNumber];
+    for (size_t i = 0; i < vertexNumber; i++) {
+        costOfTravelling[i] = INT32_MAX;
     }
 
-    // Create array to store previous vertex
+    //Utworzenie tablic do przechowywania poprzedniego wierzchołka
     int32_t* reachableFrom = new int32_t[vertexNumber];
-    // Create array to store single cost
+    //Tablica przechowująca koszt dojścia do danego wierzchołka
     int32_t* reachableFor = new int32_t[vertexNumber];
 
-    travelCosts[from] = 0;
+    costOfTravelling[from] = 0;
     int32_t currentVertex = from;
-    int32_t unvisitedVerticesNumber = vertexNumber;
+    int32_t unvisitedVertexNumber = vertexNumber;
 
-    // Find new current vertex
-    auto assignNewCurrentVertex = [&]()
-    {
-        visitedVertices[currentVertex] = true;
-        unvisitedVerticesNumber--;
-        int32_t sortestPath = INT32_MAX;
-        for (size_t vertex = 0; vertex < vertexNumber; vertex++)
-        {
-            if (visitedVertices[vertex] == false && travelCosts[vertex] < sortestPath)
-            {
-                sortestPath = travelCosts[vertex];
-                currentVertex = vertex;
-            }
-        }
-    };
-
-    // While exists unvisited vertices
-    while (unvisitedVerticesNumber > 0)
-    {
+    //Wykonuj dopóki istnieją nieodwiedzone wierzchołki
+    while (unvisitedVertexNumber > 0) {
         Edge* edge = edges[currentVertex];
-        while (edge != nullptr)
-        {
-            // Check if current travel cost is lower than old one
-            if (travelCosts[currentVertex] + edge->weight < travelCosts[edge->destination])
-            {
-                travelCosts[edge->destination] = travelCosts[currentVertex] + edge->weight;
+        while (edge != nullptr) {
+            //Sprawdzenie czy aktualnie wygenerowany koszt podróży jest mniejszy niż ten już istniejący
+            if (costOfTravelling[currentVertex] + edge->weight < costOfTravelling[edge->destination]) {
+                costOfTravelling[edge->destination] = costOfTravelling[currentVertex] + edge->weight;
                 reachableFrom[edge->destination] = currentVertex;
                 reachableFor[edge->destination] = edge->weight;
             }
@@ -158,15 +124,22 @@ Path Dijkstra::findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t fr
             edge = edge->next;
         }
 
-        // Assing new current vetrex
-        assignNewCurrentVertex();
+        //Przypisz nowy aktualny wierzchołek
+        visitedVertex[currentVertex] = true;
+        unvisitedVertexNumber--;
+        int32_t sortestPath = INT32_MAX;
+        for (size_t vertex = 0; vertex < vertexNumber; vertex++) {
+            if (visitedVertex[vertex] == false && costOfTravelling[vertex] < sortestPath) {
+                sortestPath = costOfTravelling[vertex];
+                currentVertex = vertex;
+            }
+        }
     }
 
-    currentVertex = to;
+    currentVertex = destination;
 
-    // Create the shortest path
-    while (currentVertex != from)
-    {
+    //Wygenerowanie najkrótszej ścieżki
+    while (currentVertex != from) {
         result.addEdge(PathEdge(reachableFor[currentVertex], reachableFrom[currentVertex], currentVertex));
         currentVertex = reachableFrom[currentVertex];
     }

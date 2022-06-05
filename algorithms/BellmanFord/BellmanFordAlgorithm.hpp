@@ -8,6 +8,6 @@
 class BellmanFord
 {
 public:
-    static Path findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, int32_t to);
-    static Path findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t from, int32_t to);
+    static Path findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, int32_t destination);
+    static Path findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t from, int32_t destination);
 };
