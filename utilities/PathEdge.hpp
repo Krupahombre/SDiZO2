@@ -15,7 +15,8 @@ struct PathEdge
 
     friend std::ostream& operator<<(std::ostream& stream, const PathEdge& edge)
     {
-        stream << "from " << edge.previous << " to " << edge.next << " for " << edge.value;
+        //stream << "od wierzcholka " << edge.previous << " do wierzcholka " << edge.next << " koszt = " << edge.value;
+        stream << "W[" << edge.previous << "] --> W[" << edge.next << "] koszt = " << edge.value;
 
         return stream;
     }

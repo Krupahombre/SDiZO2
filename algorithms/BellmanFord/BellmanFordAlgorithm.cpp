@@ -1,6 +1,6 @@
 #include "BellmanFordAlgorithm.hpp"
 
-Path BellmanFord::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, int32_t destination) {
+Path BellmanFord::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from, int32_t dest) {
     //Przypisanie potrzebnych danych z macierzy do lokalnych zmiennych
     Path result;
     MatrixValues** matrix = incidentMatrix.getIncidentMatrix();
@@ -38,16 +38,16 @@ Path BellmanFord::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from,
                 }
 
                 //Szukanie celu
-                for (size_t destination = 0; destination < edgesNumer; destination++) {
-                    if (matrix[destination][edge] != MatrixValues::Destination) {
+                for (size_t to = 0; to < edgesNumer; to++) {
+                    if (matrix[to][edge] != MatrixValues::Destination) {
                         continue;
                     }
 
                     //Sprawdzenie czy aktualnie wygenerowany koszt podróży jest mniejszy niż ten już istniejący
-                    if (costOfTravelling[origin] + values[edge] < costOfTravelling[destination]) {
-                        costOfTravelling[destination] = costOfTravelling[origin] + values[edge];
-                        reachableFrom[destination] = origin;
-                        reachableFor[destination] = values[edge];
+                    if (costOfTravelling[origin] + values[edge] < costOfTravelling[to]) {
+                        costOfTravelling[to] = costOfTravelling[origin] + values[edge];
+                        reachableFrom[to] = origin;
+                        reachableFor[to] = values[edge];
                     }
 
                     break;
@@ -56,7 +56,7 @@ Path BellmanFord::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from,
         }
     }
 
-    int32_t currentVertex = destination;
+    int32_t currentVertex = dest;
 
     //Wygenerowanie najkrótszej ścieżki
     while (currentVertex != from) {
@@ -67,7 +67,7 @@ Path BellmanFord::findShortestPath(IncidentMatrix& incidentMatrix, int32_t from,
     return result;
 }
 
-Path BellmanFord::findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t from, int32_t destination) {
+Path BellmanFord::findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t from, int32_t dest) {
     //Przypisanie potrzebnych danych z listy do lokalnych zmiennych
     Path result;
     Edge** edges = neighbourhoodList.getNeighbourhoodList();
@@ -111,7 +111,7 @@ Path BellmanFord::findShortestPath(NeighbourhoodList& neighbourhoodList, int32_t
         }
     }
 
-    int32_t currentVertex = destination;
+    int32_t currentVertex = dest;
 
     //Wygenerowanie najkrótszej ścieżki
     while (currentVertex != from) {

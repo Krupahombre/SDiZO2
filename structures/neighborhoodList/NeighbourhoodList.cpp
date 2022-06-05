@@ -65,7 +65,7 @@ NeighbourhoodList::~NeighbourhoodList() {
 
 void NeighbourhoodList::print() {
 
-    std::cout << std::endl << "---------- Lista Sasiedztwa ----------" << std::endl;
+//    std::cout << std::endl << "---------- Lista Sasiedztwa ----------" << std::endl;
     std::cout << std::endl << "Utworzona lista sasiedztwa:\n" << std::endl;
 
     for(size_t i = 0; i < this->vertexNumber; i++) {
@@ -73,7 +73,7 @@ void NeighbourhoodList::print() {
         auto currentEdge = this->neighbourhoodList[i];
 
         while(currentEdge != nullptr) {
-            std::cout << "-->[" << currentEdge->destination << "] koszt = " << currentEdge->weight << "| ";
+            std::cout << "--> W[" << currentEdge->destination << "] koszt = " << std::setw(2) << currentEdge->weight << "| ";
             currentEdge = currentEdge->next;
         }
 

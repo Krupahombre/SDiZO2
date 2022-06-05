@@ -213,7 +213,7 @@ void Array<T>::print(std::ostream& out)
     {
         for (size_t i = 0; i < this->size; i++)
         {
-            out << i << "> " << this->head[i] << std::endl;
+            out << "<polaczenie " << i+1 << "> " << this->head[i] << std::endl;
         }
         return;
     }

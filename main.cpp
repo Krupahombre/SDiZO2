@@ -3,7 +3,6 @@
 #include "Menu.hpp"
 #include "utilities/ReaderFromFile.hpp"
 #include "utilities/RandomGenerator.hpp"
-#include "utilities/Timer.hpp"
 #include "algorithms/Prim/PrimAlgorithm.hpp"
 
 int main() {
@@ -32,18 +31,18 @@ int main() {
 
     //auto matrix = new IncidentMatrix(9, 6, tab);
 
-    auto matrix = reader.readerForMatrix("dane.txt");
+    //auto matrix = reader.readerForMatrix("dane.txt");
 
     //auto matrix = new IncidentMatrix(graphData.edgeCount, graphData.vertexCount, graphData.data);
 
-    matrix->print();
+    //matrix->print();
 
-    auto matrixPRIM = Prim::generateMst(*matrix);
+    //auto matrixPRIM = Prim::generateMst(*matrix);
 
-    matrixPRIM->print();
-    matrixPRIM->printFancy();
+    //matrixPRIM->print();
+    //matrixPRIM->printFancy();
 
-    delete matrix;
+    //delete matrix;
 
     //auto list = new NeighbourhoodList(9, 6, tab);
 
@@ -57,6 +56,6 @@ int main() {
 
     //delete[] graphData.data;
 
-    //menu();
+    menu();
     return 0;
 }

@@ -45,11 +45,7 @@ IncidentMatrix::~IncidentMatrix() {
 void IncidentMatrix::print() {
     std::cout << std::endl;
 
-    std::cout << "---------- Macierz Sasiedztwa ----------\n";
-
     //wyświetlenie krawędzi z wagami
-    std::cout << std::endl;
-
     std::cout << "Wagi poszczegolnych krawedzi:\n" << std::endl;
 
     for (size_t i = 0; i < this->edgeCount; i++) {
@@ -81,13 +77,14 @@ void IncidentMatrix::print() {
 
 void printSourceNode(int32_t value, int32_t weight) {
 
+    char symbol = 11;
     printf(".===.\n");
     printf("| %d |\n", value);
     printf("'==='\n\n");
-    printf(" | \n");
-    printf(" |  [%d] \n", weight);
-    printf(" | \n");
-    printf(" \\/\n");
+    printf("  | \n");
+    printf("  |  [%d] \n", weight);
+    printf("  | \n");
+    printf(" \\|/\n");
 }
 
 void printDestinationNode(int32_t value) {
@@ -99,24 +96,18 @@ void printDestinationNode(int32_t value) {
 
 void IncidentMatrix::printFancy() {
 
-    int32_t costOfBuildingMST = 0;
+    int32_t costOfBuilding = 0;
     /* Chociaż w sumie wyszło pionowo bo tak łatwiej
      *  .===.   .===.   .===.   .===.
         | a |---| b |---| c |---| d |
         '==='   '==='   '---'   '==='
      */
-
-    std::cout<< std::endl << "---------- Macierz Sasiedztwa ----------" << std::endl;
-
-    std::cout << "Wagi poszczegolnych krawedzi:\n" << std::endl;
-
     for (size_t i = 0; i < this->edgeCount; i++) {
-        std::cout << "e" << i << ": " << std::setw(2) << this->edgeValues[i] << " | ";
-        costOfBuildingMST += edgeValues[i];
+        costOfBuilding += edgeValues[i];
         //std::setw - ustawia długość parametru drukowanego; w tym przypadku 2 miejsca
     }
 
-    std::cout << "\nCalkowity koszt utworzenia MST: " << costOfBuildingMST << std::endl;
+    std::cout << "\n\nSuma wag po wykonaniu algorytmu: " << costOfBuilding << std::endl;
 
     std::cout << "\nGraf:" << std::endl;
 

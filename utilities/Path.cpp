@@ -12,6 +12,6 @@ void Path::addEdge(PathEdge edge)
 
 void Path::print(std::ostream& out)
 {
+    out << "Calkowity koszt: " << this->totalCost << std::endl;
     this->edges.print(out);
-    out << "Total cost: " << this->totalCost << std::endl;
 }
