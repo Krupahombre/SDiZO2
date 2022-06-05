@@ -5,12 +5,12 @@
 struct GraphData
 {
     GraphData(const GraphData& graphData)
-            : data(graphData.data), vertexNumber(graphData.vertexNumber),
-              edgeNumber(graphData.edgeNumber) {}
+            : data(graphData.data), vertexCount(graphData.vertexCount),
+              edgeCount(graphData.edgeCount) {}
 
-    GraphData() : data(nullptr), vertexNumber(0), edgeNumber(0) {}
+    GraphData() : data(nullptr), vertexCount(0), edgeCount(0) {}
 
     int32_t* data;
-    int32_t vertexNumber;
-    int32_t edgeNumber;
+    int32_t vertexCount;
+    int32_t edgeCount;
 };

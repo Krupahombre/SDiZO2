@@ -24,7 +24,7 @@ int main() {
 
     //Timer t;
 
-    //auto graphData = RandomGenerator::generateRandomGraph(8, 0.5);
+    auto graphData = RandomGenerator::generateRandomGraph(8, 0.5);
 
     //t.stop();
 
@@ -32,9 +32,9 @@ int main() {
 
     //auto matrix = new IncidentMatrix(9, 6, tab);
 
-    auto matrix = reader.readerForMatrix("dane.txt");
+   // auto matrix = reader.readerForMatrix("dane.txt");
 
-    //auto matrix = new IncidentMatrix(graphData.edgeCount, graphData.vertexCount, graphData.data);
+    auto matrix = new IncidentMatrix(graphData.edgeCount, graphData.vertexCount, graphData.data);
 
     matrix->print();
 

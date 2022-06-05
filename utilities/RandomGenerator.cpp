@@ -64,8 +64,8 @@ GraphData RandomGenerator::generateRandomGraph(size_t vertexNumber, float densit
 
     GraphData result;
     result.data = data;
-    result.vertexNumber = vertexNumber;
-    result.edgeNumber = edgeNumber;
+    result.vertexCount = vertexNumber;
+    result.edgeCount = edgeNumber;
 
     return result;
 }
